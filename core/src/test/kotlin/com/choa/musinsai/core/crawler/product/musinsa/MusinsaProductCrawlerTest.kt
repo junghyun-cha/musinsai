@@ -15,8 +15,7 @@ class MusinsaProductCrawlerTest {
 
     @BeforeEach
     fun setUp() {
-        val webClientBuilder = WebClient.builder()
-        crawler = MusinsaProductCrawler(webClientBuilder)
+        crawler = MusinsaProductCrawler()
     }
 
     @Test

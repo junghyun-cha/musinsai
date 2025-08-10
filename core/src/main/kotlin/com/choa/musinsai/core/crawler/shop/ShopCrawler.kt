@@ -1,15 +1,10 @@
 package com.choa.musinsai.core.crawler.shop
 
-import com.choa.musinsai.core.crawler.shop.musinsa.OfflineShopSearchResult
-
 /**
  * Generic interface for shop crawlers.
- * Minimal contract matching existing MusinsaOfflineShopCrawler behavior.
+ * Request/Response standardized to objects.
  */
 interface ShopCrawler {
-    fun getShops(
-        shopType: String? = "",
-        region: String? = "",
-        language: String = "ko"
-    ): OfflineShopSearchResult
+    fun getShops(request: ShopSearchRequest): ShopSearchResult
+    fun getShopDetail(request: ShopDetailRequest): ShopDetailResult
 }

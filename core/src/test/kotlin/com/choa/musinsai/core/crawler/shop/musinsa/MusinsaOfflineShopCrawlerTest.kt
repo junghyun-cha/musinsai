@@ -1,6 +1,5 @@
-package com.choa.musinsai.core.provider.crawler.shop.musinsa
+package com.choa.musinsai.core.crawler.shop.musinsa
 
-import com.choa.musinsai.core.crawler.shop.musinsa.MusinsaOfflineShopCrawler
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach

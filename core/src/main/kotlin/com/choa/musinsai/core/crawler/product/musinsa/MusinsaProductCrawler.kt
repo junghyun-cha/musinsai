@@ -3,9 +3,9 @@ package com.choa.musinsai.core.crawler.product.musinsa
 import com.choa.musinsai.core.crawler.product.ProductCrawler
 import com.choa.musinsai.core.crawler.product.ProductSearchRequest
 import com.choa.musinsai.core.crawler.product.ProductSearchResponse
-import com.choa.musinsai.core.domain.Gender
-import com.choa.musinsai.core.domain.Product
-import com.choa.musinsai.core.domain.ShoppingPlatform
+import com.choa.musinsai.core.crawler.Gender
+import com.choa.musinsai.core.crawler.product.Product
+import com.choa.musinsai.core.crawler.ShoppingPlatform
 import mu.KotlinLogging
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
@@ -16,7 +16,8 @@ import reactor.core.publisher.Mono
 import java.time.Duration
 
 @Component
-class MusinsaProductCrawler(private val webClientBuilder: WebClient.Builder) : ProductCrawler {
+class MusinsaProductCrawler(
+) : ProductCrawler {
 
     private val logger = KotlinLogging.logger {}
 
@@ -26,7 +27,7 @@ class MusinsaProductCrawler(private val webClientBuilder: WebClient.Builder) : P
         private const val TIMEOUT_SECONDS = 30L
     }
 
-    private val webClient = webClientBuilder
+    private val webClient = WebClient.builder()
         .baseUrl(BASE_URL)
         .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
         .defaultHeader(HttpHeaders.USER_AGENT, USER_AGENT)

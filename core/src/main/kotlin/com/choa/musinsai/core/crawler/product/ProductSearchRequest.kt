@@ -6,4 +6,5 @@ data class ProductSearchRequest(
     val sortCode: String = "POPULAR", // POPULAR, SALE, PRICE_LOW, PRICE_HIGH, NEW
     val page: Int = 1,
     val size: Int = 60,
+    val cookieString: String? = null // 인증이 필요한 경우 쿠키 문자열
 )

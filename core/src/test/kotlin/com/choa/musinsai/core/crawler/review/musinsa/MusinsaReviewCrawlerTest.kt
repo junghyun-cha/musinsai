@@ -1,9 +1,7 @@
 package com.choa.musinsai.core.crawler.review.musinsa
 
 import com.choa.musinsai.core.crawler.review.ReviewSearchRequest
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -22,27 +20,20 @@ class MusinsaReviewCrawlerTest {
 
     @Test
     @DisplayName("무신사 리뷰 기본 조회 - 구조 검증")
-    fun testGetProductReviews_basic() {
+    fun testSearchReviews_basic() {
         // Given: 실제 존재 여부가 불명확한 goodsNo 를 사용하되 구조 검증 위주로 확인
         val request = ReviewSearchRequest(
-            goodsNo = 12345L, // 임의의 상품 번호: 결과가 0이어도 구조만 검증
-            page = 1,
+            goodsNo = 4996841, // 임의의 상품 번호: 결과가 0이어도 구조만 검증
+            page = 0,
             pageSize = 10,
             sort = "date_desc"
         )
 
         // When
-        val result = crawler.getProductReviews(request)
-
+        val result = crawler.search(request)
         // Then
         assertNotNull(result)
         assertTrue(result.totalCount >= 0)
-        assertEquals(request.page, result.currentPage)
-        assertTrue(result.totalPages >= 0)
-        // hasNext 는 currentPage 와 totalPages 관계 기반으로 계산됨
-        if (result.totalPages > 0) {
-            assertEquals(result.currentPage < result.totalPages, result.hasNext)
-        }
         // 리뷰 각각의 필수 필드(매핑)도 간단 확인
         result.reviews.forEach { r ->
             assertNotNull(r.id)
@@ -55,7 +46,7 @@ class MusinsaReviewCrawlerTest {
 
     @Test
     @DisplayName("무신사 리뷰 - 사진 리뷰 필터(hasPhoto) 적용")
-    fun testGetProductReviews_withPhotoFilter() {
+    fun testSearchReviews_withPhotoFilter() {
         // Given
         val request = ReviewSearchRequest(
             goodsNo = 12345L,
@@ -65,7 +56,7 @@ class MusinsaReviewCrawlerTest {
         )
 
         // When
-        val result = crawler.getProductReviews(request)
+        val result = crawler.search(request)
 
         // Then
         assertNotNull(result)
@@ -85,43 +76,30 @@ class MusinsaReviewCrawlerTest {
         val page2 = ReviewSearchRequest(goodsNo = 12345L, page = 2, pageSize = 3)
 
         // When
-        val r1 = crawler.getProductReviews(page1)
-        val r2 = crawler.getProductReviews(page2)
+        val r1 = crawler.search(page1)
+        val r2 = crawler.search(page2)
 
         // Then
-        assertEquals(1, r1.currentPage)
-        assertEquals(2, r2.currentPage)
-        assertTrue(r1.totalPages >= 0)
-        assertTrue(r2.totalPages >= 0)
-        if (r1.totalPages > 0) {
-            assertEquals(r1.currentPage < r1.totalPages, r1.hasNext)
-        }
-        if (r2.totalPages > 0) {
-            assertEquals(r2.currentPage < r2.totalPages, r2.hasNext)
-        }
+        assertNotNull(r1)
+        assertNotNull(r2)
+        assertTrue(r1.totalCount >= 0)
+        assertTrue(r2.totalCount >= 0)
     }
 
     @Test
-    @DisplayName("무신사 리뷰 - 리뷰가 없을 때 summary 는 null 일 수 있다")
-    fun testSummaryWhenNoReviews() {
+    @DisplayName("무신사 리뷰 - 빈 결과 처리")
+    fun testEmptyReviews() {
         // Given: 존재하지 않을 가능성이 매우 높은 큰 goodsNo
         val request = ReviewSearchRequest(goodsNo = Long.MAX_VALUE, page = 1, pageSize = 5)
 
         // When
-        val result = crawler.getProductReviews(request)
+        val result = crawler.search(request)
 
         // Then
-        // 총 개수가 0 이면 summary 는 null 로 매핑됨
+        assertNotNull(result)
+        // 총 개수가 0 이면 reviews는 빈 리스트
         if (result.totalCount == 0) {
-            assertNull(result.summary)
-        } else {
-            // 혹시라도 응답이 있다면 summary 구조만 검증
-            assertNotNull(result.summary)
-            result.summary?.let { s ->
-                assertEquals(request.goodsNo.toString(), s.productId)
-                assertTrue(s.totalCount >= 0)
-                assertTrue(s.averageRating >= 0.0)
-            }
+            assertTrue(result.reviews.isEmpty())
         }
     }
 }

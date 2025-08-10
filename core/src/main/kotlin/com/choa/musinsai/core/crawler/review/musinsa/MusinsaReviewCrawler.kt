@@ -2,12 +2,11 @@ package com.choa.musinsai.core.crawler.review.musinsa
 
 import com.choa.musinsai.core.crawler.review.ReviewCrawler
 import com.choa.musinsai.core.crawler.review.ReviewSearchRequest
-import com.choa.musinsai.core.domain.Gender
-import com.choa.musinsai.core.domain.Review
-import com.choa.musinsai.core.domain.ReviewSearchResult
-import com.choa.musinsai.core.domain.ReviewSummary
-import com.choa.musinsai.core.domain.ShoppingPlatform
-import com.choa.musinsai.core.domain.UserProfile
+import com.choa.musinsai.core.crawler.review.ReviewSearchResponse
+import com.choa.musinsai.core.crawler.Gender
+import com.choa.musinsai.core.crawler.review.Review
+import com.choa.musinsai.core.crawler.ShoppingPlatform
+import com.choa.musinsai.core.crawler.review.UserProfile
 import mu.KotlinLogging
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
@@ -36,36 +35,25 @@ class MusinsaReviewCrawler(private val webClientBuilder: WebClient.Builder) : Re
         .defaultHeader(HttpHeaders.USER_AGENT, USER_AGENT)
         .build()
 
-    override fun getProductReviews(request: ReviewSearchRequest): ReviewSearchResult {
+    override fun search(request: ReviewSearchRequest): ReviewSearchResponse {
         return try {
             logger.info { "무신사 리뷰 조회 시작: goodsNo=${request.goodsNo}, page=${request.page}" }
 
             val response = callApi(request)
             val reviews = response.data.list.map { toDomainReview(it) }
-            val pagination = response.data.page
-            val currentPage = pagination?.page ?: request.page
-            val totalPages = pagination?.totalPages
-                ?: if (response.data.total > 0 && request.pageSize > 0) ((response.data.total + request.pageSize - 1) / request.pageSize) else 0
-            val hasNext = totalPages > 0 && currentPage < totalPages
 
-            ReviewSearchResult(
+            logger.info {
+                "무신사 리뷰 조회 완료: 총 ${response.data.total}개 중 ${reviews.size}개 리뷰 조회"
+            }
+
+            ReviewSearchResponse(
                 reviews = reviews,
                 totalCount = response.data.total,
-                currentPage = currentPage,
-                totalPages = totalPages,
-                hasNext = hasNext,
-                summary = buildSummary(request.goodsNo, response)
+                productName = response.data.goods?.goodsName
             )
         } catch (e: Exception) {
             logger.error(e) { "무신사 리뷰 조회 중 오류 발생" }
-            ReviewSearchResult(
-                reviews = emptyList(),
-                totalCount = 0,
-                currentPage = request.page,
-                totalPages = 0,
-                hasNext = false,
-                summary = null
-            )
+            ReviewSearchResponse(emptyList(), 0, null)
         }
     }
 
@@ -119,22 +107,6 @@ class MusinsaReviewCrawler(private val webClientBuilder: WebClient.Builder) : Re
             createdAt = createdAt,
             isVerifiedPurchase = r.orderOptionNo != 0L,
             platform = ShoppingPlatform.MUSINSA
-        )
-    }
-
-    private fun buildSummary(goodsNo: Long, res: MusinsaReviewApiResponse): ReviewSummary? {
-        if (res.data.total == 0) return null
-        val grades = res.data.list.mapNotNull { it.grade.toIntOrNull() }
-        val avg = if (grades.isNotEmpty()) grades.average() else 0.0
-        val distribution = (1..5).associateWith { g -> grades.count { it == g } }
-        return ReviewSummary(
-            productId = goodsNo.toString(),
-            totalCount = res.data.total,
-            averageRating = avg,
-            ratingDistribution = distribution,
-            positiveKeywords = emptyList(),
-            negativeKeywords = emptyList(),
-            mostHelpfulReviews = emptyList()
         )
     }
 

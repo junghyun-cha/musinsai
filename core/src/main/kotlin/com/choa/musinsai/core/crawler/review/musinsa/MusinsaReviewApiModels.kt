@@ -12,7 +12,8 @@ data class MusinsaReviewApiResponse(
 data class MusinsaReviewData(
     val list: List<MusinsaReview> = emptyList(),
     val total: Int = 0,
-    val page: MusinsaReviewPagination? = null
+    val page: MusinsaReviewPagination? = null,
+    val goods: ReviewGoods? = null
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
