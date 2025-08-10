@@ -1,11 +1,8 @@
 package com.choa.musinsai.core.provider.crawler.order
 
-import com.choa.musinsai.core.crawler.order.OrderHistoryRequest
-import com.choa.musinsai.core.crawler.order.OrderHistoryResponse
+import com.choa.musinsai.core.provider.crawler.order.musinsa.OrderDetailRequest
+import com.choa.musinsai.core.provider.crawler.order.musinsa.OrderDetailResponse
 
 interface OrderCrawler {
-    suspend fun getOrderHistory(
-        request: OrderHistoryRequest,
-        cookies: Map<String, String>?
-    ): OrderHistoryResponse
+    suspend fun getOrderDetail(request: OrderDetailRequest): OrderDetailResponse
 }

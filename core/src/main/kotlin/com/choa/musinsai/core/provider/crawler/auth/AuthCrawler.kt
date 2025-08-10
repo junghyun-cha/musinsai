@@ -1,4 +1,4 @@
-package com.choa.musinsai.core.crawler.auth
+package com.choa.musinsai.core.provider.crawler.auth
 
 interface AuthCrawler {
     fun getAuthInfo(cookies: Map<String, String>): AuthInfo?

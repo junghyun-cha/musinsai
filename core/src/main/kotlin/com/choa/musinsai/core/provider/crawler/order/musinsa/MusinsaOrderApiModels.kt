@@ -1,4 +1,4 @@
-package com.choa.musinsai.core.crawler.order.musinsa
+package com.choa.musinsai.core.provider.crawler.order.musinsa
 
 import com.fasterxml.jackson.annotation.JsonProperty
 

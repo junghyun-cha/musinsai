@@ -1,9 +1,10 @@
 package com.choa.musinsai.core.crawler.order.musinsa
 
 import com.choa.musinsai.core.config.WebClientConfig
-import com.choa.musinsai.core.crawler.auth.musinsa.MusinsaAuthCrawler
-import com.choa.musinsai.core.crawler.order.OrderDetailRequest
-import com.choa.musinsai.core.crawler.order.OrderState
+import com.choa.musinsai.core.provider.crawler.auth.musinsa.MusinsaAuthCrawler
+import com.choa.musinsai.core.provider.crawler.order.musinsa.MusinsaOrderCrawler
+import com.choa.musinsai.core.provider.crawler.order.musinsa.OrderDetailRequest
+import com.choa.musinsai.core.provider.crawler.order.musinsa.OrderState
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach

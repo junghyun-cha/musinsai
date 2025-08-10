@@ -1,5 +1,6 @@
 package com.choa.musinsai.core.crawler.auth.musinsa
 
+import com.choa.musinsai.core.provider.crawler.auth.musinsa.MusinsaAuthCrawler
 import org.junit.jupiter.api.Test
 
 class MusinsaAuthCrawlerTest {

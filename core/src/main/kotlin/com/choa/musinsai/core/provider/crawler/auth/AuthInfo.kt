@@ -1,4 +1,4 @@
-package com.choa.musinsai.core.crawler.auth
+package com.choa.musinsai.core.provider.crawler.auth
 
 data class AuthInfo(
     val loggedIn: Boolean,

@@ -1,4 +1,4 @@
-package com.choa.musinsai.core.crawler.order
+package com.choa.musinsai.core.provider.crawler.order.musinsa
 
 data class OrderDetailRequest(
     val orderNo: String,

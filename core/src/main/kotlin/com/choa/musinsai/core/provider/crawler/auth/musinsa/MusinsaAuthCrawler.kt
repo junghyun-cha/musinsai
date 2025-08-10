@@ -1,9 +1,9 @@
-package com.choa.musinsai.core.crawler.auth.musinsa
+package com.choa.musinsai.core.provider.crawler.auth.musinsa
 
-import com.choa.musinsai.core.crawler.auth.AuthCrawler
-import com.choa.musinsai.core.crawler.auth.AuthInfo
-import com.choa.musinsai.core.crawler.auth.AuthTokenInfo
-import com.choa.musinsai.core.crawler.auth.MemberInfo
+import com.choa.musinsai.core.provider.crawler.auth.AuthCrawler
+import com.choa.musinsai.core.provider.crawler.auth.AuthInfo
+import com.choa.musinsai.core.provider.crawler.auth.AuthTokenInfo
+import com.choa.musinsai.core.provider.crawler.auth.MemberInfo
 import mu.KotlinLogging
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
