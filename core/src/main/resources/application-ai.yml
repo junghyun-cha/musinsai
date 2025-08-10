@@ -1,0 +1,97 @@
+spring:
+  config:
+    import: "optional:classpath:sensitive-info.properties"
+  ai:
+    bedrock:
+      aws:
+        region: ap-northeast-2
+        timeout: 5m
+      converse:
+        chat:
+          options:
+            model: arn:aws:bedrock:ap-northeast-2:522814689722:application-inference-profile/pob3p0qbtd0o
+            max-tokens: 8192
+    openai:
+      api-key: NONE
+
+---
+spring.config.activate.on-profile: local
+aws:
+  credentials:
+    profile: mss-choavis-522814689722
+  bedrock:
+    role:
+      arn: arn:aws:iam::522814689722:role/dev-mss-choavis-bedrock-assume-role
+    model:
+      anthropic-claude-3-5-sonnet-v2: arn:aws:bedrock:ap-northeast-2:522814689722:application-inference-profile/pob3p0qbtd0o # anthropic.claude-3-5-sonnet-20241022-v2:0
+      anthropic-claude-3-7-sonnet-v1: arn:aws:bedrock:ap-northeast-2:522814689722:application-inference-profile/r46qqhl2e036 # anthropic.claude-3-7-sonnet-20250219-v1:0
+      anthropic-claude-sonnet-4-v1: arn:aws:bedrock:ap-northeast-2:522814689722:application-inference-profile/7m2n3en6vlto # anthropic.claude-sonnet-4-20250514-v1:0
+      amazon-nova-lite-v1: arn:aws:bedrock:ap-northeast-2:522814689722:application-inference-profile/qlte41pigdw5 # amazon.nova-lite-v1:0
+      amazon-nova-micro-v1: arn:aws:bedrock:ap-northeast-2:522814689722:application-inference-profile/qqlaxcglhziv # amazon.nova-micro-v1:0
+      amazon-nova-pro-v1: arn:aws:bedrock:ap-northeast-2:522814689722:application-inference-profile/697xfkd7sg2u # amazon.nova-pro-v1:0
+      amazon-titan-embed-text-v2: arn:aws:bedrock:ap-northeast-2:522814689722:application-inference-profile/l9v58gykqd0z # amazon.titan-embed-text-v2:0
+      amazon-nova-canvas-v1: arn:aws:bedrock:us-east-1:522814689722:application-inference-profile/g0aok9eki0di # amazon.nova-canvas-v1:0
+      amazon-nova-premier-v1: arn:aws:bedrock:us-east-1:522814689722:application-inference-profile/reyu0ckhwjc9 # amazon.nova-premier-v1:0
+
+
+
+---
+spring.config.activate.on-profile: dev
+
+spring:
+  ai:
+    bedrock:
+      converse:
+        chat:
+          options:
+            model: arn:aws:bedrock:ap-northeast-2:522814689722:application-inference-profile/pob3p0qbtd0o
+            max-tokens: 8192
+
+aws:
+  bedrock:
+    role:
+      arn: arn:aws:iam::522814689722:role/dev-mss-choavis-bedrock-assume-role
+    model:
+      anthropic-claude-3-5-sonnet-v2: arn:aws:bedrock:ap-northeast-2:522814689722:application-inference-profile/pob3p0qbtd0o # anthropic.claude-3-5-sonnet-20241022-v2:0
+      anthropic-claude-3-7-sonnet-v1: arn:aws:bedrock:ap-northeast-2:522814689722:application-inference-profile/r46qqhl2e036 # anthropic.claude-3-7-sonnet-20250219-v1:0
+      anthropic-claude-sonnet-4-v1: arn:aws:bedrock:ap-northeast-2:522814689722:application-inference-profile/7m2n3en6vlto # anthropic.claude-sonnet-4-20250514-v1:0
+      amazon-nova-lite-v1: arn:aws:bedrock:ap-northeast-2:522814689722:application-inference-profile/qlte41pigdw5 # amazon.nova-lite-v1:0
+      amazon-nova-micro-v1: arn:aws:bedrock:ap-northeast-2:522814689722:application-inference-profile/qqlaxcglhziv # amazon.nova-micro-v1:0
+      amazon-nova-pro-v1: arn:aws:bedrock:ap-northeast-2:522814689722:application-inference-profile/697xfkd7sg2u # amazon.nova-pro-v1:0
+      amazon-titan-embed-text-v2: arn:aws:bedrock:ap-northeast-2:522814689722:application-inference-profile/l9v58gykqd0z # amazon.titan-embed-text-v2:0
+      amazon-nova-canvas-v1: arn:aws:bedrock:us-east-1:522814689722:application-inference-profile/g0aok9eki0di # amazon.nova-canvas-v1:0
+      amazon-nova-premier-v1: arn:aws:bedrock:us-east-1:522814689722:application-inference-profile/reyu0ckhwjc9 # amazon.nova-premier-v1:0
+
+
+
+---
+spring.config.activate.on-profile: prod
+
+spring:
+  ai:
+    bedrock:
+      converse:
+        chat:
+          options:
+            model: arn:aws:bedrock:ap-northeast-2:522814689722:application-inference-profile/ibx7tb1rk3pr
+            max-tokens: 8192
+
+aws:
+  bedrock:
+    role:
+      arn: arn:aws:iam::522814689722:role/prd-mss-choavis-bedrock-assume-role
+    model:
+      anthropic-claude-3-5-sonnet-v2: arn:aws:bedrock:ap-northeast-2:522814689722:application-inference-profile/ibx7tb1rk3pr # anthropic.claude-3-5-sonnet-20241022-v2:0
+      anthropic-claude-3-7-sonnet-v1: arn:aws:bedrock:ap-northeast-2:522814689722:application-inference-profile/5agx0zh1r7y1 # anthropic.claude-3-7-sonnet-20250219-v1:0
+      anthropic-claude-sonnet-4-v1: arn:aws:bedrock:ap-northeast-2:522814689722:application-inference-profile/gt1gb6x978w0 # anthropic.claude-sonnet-4-20250514-v1:0
+      amazon-nova-lite-v1: arn:aws:bedrock:ap-northeast-2:522814689722:application-inference-profile/b2wq0swr85o9 # amazon.nova-lite-v1:0
+      amazon-nova-micro-v1: arn:aws:bedrock:ap-northeast-2:522814689722:application-inference-profile/frfo6hkoritw # amazon.nova-micro-v1:0
+      amazon-nova-pro-v1: arn:aws:bedrock:ap-northeast-2:522814689722:application-inference-profile/5zqxe3yc76fo # amazon.nova-pro-v1:0
+      amazon-titan-embed-text-v2: arn:aws:bedrock:ap-northeast-2:522814689722:application-inference-profile/pui775bixjgu # amazon.titan-embed-text-v2:0
+      amazon-nova-canvas-v1: arn:aws:bedrock:us-east-1:522814689722:application-inference-profile/c3d6wgoqn92y # amazon.nova-canvas-v1:0
+      amazon-nova-premier-v1: arn:aws:bedrock:us-east-1:522814689722:application-inference-profile/sl04bu6dwst6 # amazon.nova-premier-v1:0
+
+
+
+
+

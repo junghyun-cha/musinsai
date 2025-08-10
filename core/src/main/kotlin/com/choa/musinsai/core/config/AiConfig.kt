@@ -1,6 +1,8 @@
 package com.choa.musinsai.core.config
 
 import io.micrometer.observation.ObservationRegistry
+import org.springframework.ai.bedrock.converse.BedrockProxyChatModel
+import org.springframework.ai.chat.client.ChatClient
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -14,6 +16,11 @@ import java.time.Duration
 @Configuration
 @EnableConfigurationProperties(BedrockModelProperties::class)
 class AiConfig {
+
+    @Bean
+    fun chatClient(anthropicChatModel: BedrockProxyChatModel): ChatClient {
+        return ChatClient.create(anthropicChatModel)
+    }
 
     @Bean
     fun bedrockRuntimeClient(awsCredentialsProvider: AwsCredentialsProvider): BedrockRuntimeClient =

@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: core-service
+  config:
+    import:
+      - classpath:application-ai.yml
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      fail-on-unknown-properties: false
+      fail-on-null-for-primitives: false

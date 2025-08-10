@@ -7,8 +7,15 @@ plugins {
 tasks.jar {
     enabled = true
 }
+
+repositories {
+    mavenCentral()
+    maven { url = uri("https://repo.spring.io/milestone") }
+    maven { url = uri("https://repo.spring.io/snapshot") }
+}
+
 dependencies {
-    implementation("org.springframework.ai:spring-ai-starter-model-bedrock:1.0.0")
+    implementation("org.springframework.ai:spring-ai-bedrock-converse-spring-boot-starter:1.0.0-M6")
     // AWS SSO 의존성 추가
     implementation("software.amazon.awssdk:sso:2.31.30")
     implementation("software.amazon.awssdk:ssooidc:2.31.30")
