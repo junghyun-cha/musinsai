@@ -1,11 +1,11 @@
 package com.choa.musinsai.core.crawler.product.musinsa
 
+import com.choa.musinsai.core.crawler.Gender
+import com.choa.musinsai.core.crawler.ShoppingPlatform
+import com.choa.musinsai.core.crawler.product.Product
 import com.choa.musinsai.core.crawler.product.ProductCrawler
 import com.choa.musinsai.core.crawler.product.ProductSearchRequest
 import com.choa.musinsai.core.crawler.product.ProductSearchResponse
-import com.choa.musinsai.core.crawler.Gender
-import com.choa.musinsai.core.crawler.product.Product
-import com.choa.musinsai.core.crawler.ShoppingPlatform
 import mu.KotlinLogging
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
@@ -16,8 +16,7 @@ import reactor.core.publisher.Mono
 import java.time.Duration
 
 @Component
-class MusinsaProductCrawler(
-) : ProductCrawler {
+class MusinsaProductCrawler() : ProductCrawler {
 
     private val logger = KotlinLogging.logger {}
 

@@ -1,11 +1,11 @@
 package com.choa.musinsai.core.crawler.review.musinsa
 
+import com.choa.musinsai.core.crawler.Gender
+import com.choa.musinsai.core.crawler.ShoppingPlatform
+import com.choa.musinsai.core.crawler.review.Review
 import com.choa.musinsai.core.crawler.review.ReviewCrawler
 import com.choa.musinsai.core.crawler.review.ReviewSearchRequest
 import com.choa.musinsai.core.crawler.review.ReviewSearchResponse
-import com.choa.musinsai.core.crawler.Gender
-import com.choa.musinsai.core.crawler.review.Review
-import com.choa.musinsai.core.crawler.ShoppingPlatform
 import com.choa.musinsai.core.crawler.review.UserProfile
 import mu.KotlinLogging
 import org.springframework.http.HttpHeaders
