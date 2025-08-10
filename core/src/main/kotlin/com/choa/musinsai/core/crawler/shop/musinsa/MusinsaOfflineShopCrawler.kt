@@ -24,10 +24,14 @@ class MusinsaOfflineShopCrawler : ShopCrawler {
         .defaultHeader(HttpHeaders.USER_AGENT, USER_AGENT)
         .build()
 
+    // Convenience overloads to preserve default-like usage when calling the concrete class directly
+    fun getShops(): OfflineShopSearchResult = getShops("", "", "ko")
+    fun getShops(shopType: String?): OfflineShopSearchResult = getShops(shopType, "", "ko")
+
     override fun getShops(
-        shopType: String? = "",
-        region: String? = "",
-        language: String = "ko"
+        shopType: String?,
+        region: String?,
+        language: String
     ): OfflineShopSearchResult {
         return try {
             logger.info { "무신사 오프라인 매장 조회 시작: shopType=$shopType, region=$region, language=$language" }
