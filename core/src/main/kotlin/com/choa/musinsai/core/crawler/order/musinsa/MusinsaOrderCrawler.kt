@@ -4,7 +4,8 @@ import com.choa.musinsai.core.crawler.order.*
 import com.choa.musinsai.core.exception.CrawlerException
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import kotlinx.coroutines.reactive.awaitFirst
+import kotlinx.coroutines.reactive.awaitFirstOrNull
+import kotlinx.coroutines.reactive.awaitSingle
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
@@ -12,6 +13,8 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import reactor.core.publisher.Mono
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.collections.component1
+import kotlin.collections.component2
 
 @Component
 class MusinsaOrderCrawler(
@@ -25,7 +28,7 @@ class MusinsaOrderCrawler(
         logger.info("Fetching order detail for orderNo: ${request.orderNo}")
 
         return try {
-            val response = fetchOrderDetail(request.orderNo, request.accessToken)
+            val response = fetchOrderDetail(request.orderNo, request)
             mapToOrderDetailResponse(response)
         } catch (e: WebClientResponseException) {
             logger.error("Failed to fetch order detail: ${e.statusCode} - ${e.responseBodyAsString}")
@@ -36,19 +39,21 @@ class MusinsaOrderCrawler(
         }
     }
 
-    private suspend fun fetchOrderDetail(orderNo: String, accessToken: String?): MusinsaOrderDetailApiResponse {
+    private suspend fun fetchOrderDetail(orderNo: String, request: OrderDetailRequest): MusinsaOrderDetailApiResponse {
         val url = "https://www.musinsa.com/order-service/my/order/get_order_view/$orderNo"
-        
-        var requestSpec = webClient.get()
+
+        val requestSpec = webClient.get()
             .uri(url)
             .header("accept", "application/json, text/plain, */*")
             .header("accept-language", "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7")
             .header("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36")
             .header("referer", "https://www.musinsa.com/")
-
-        if (!accessToken.isNullOrEmpty()) {
-            requestSpec = requestSpec.header("cookie", "accessToken=$accessToken")
-        }
+            .apply {
+                // 쿠키가 있으면 추가
+                request.cookies?.forEach { (name, value) ->
+                    cookie(name, value)
+                }
+            }
 
         val responseBody = requestSpec
             .retrieve()
@@ -57,7 +62,11 @@ class MusinsaOrderCrawler(
                 logger.error("Error fetching order detail", error)
                 Mono.error(error)
             }
-            .awaitFirst()
+            .awaitFirstOrNull()
+
+        if (responseBody.isNullOrEmpty()) {
+            throw CrawlerException("Empty response from order detail API")
+        }
 
         return objectMapper.readValue(responseBody)
     }
@@ -65,10 +74,10 @@ class MusinsaOrderCrawler(
     private fun mapToOrderDetailResponse(apiResponse: MusinsaOrderDetailApiResponse): OrderDetailResponse {
         val orderList = apiResponse.orderList
         val orderInfo = apiResponse.orderInfo
-        
+
         // Parse order date
         val orderDate = parseOrderDate(orderInfo.ordDate)
-        
+
         // Map order items
         val orderItems = orderList.orderOptionList.map { option ->
             OrderItem(
@@ -90,7 +99,7 @@ class MusinsaOrderCrawler(
                 isDigitalVoucher = option.isDigitalVoucher
             )
         }
-        
+
         // Map payment info
         val paymentInfo = PaymentInfo(
             payKind = orderInfo.payKind,
@@ -100,7 +109,7 @@ class MusinsaOrderCrawler(
             totalAmount = orderInfo.recvAmt.toLongOrNull() ?: 0L,
             receiptPageUrl = orderInfo.receiptPageUrl.takeIf { it.isNotEmpty() }
         )
-        
+
         // Map delivery info
         val deliveryInfo = DeliveryInfo(
             recipientName = orderInfo.rNm,
@@ -111,7 +120,7 @@ class MusinsaOrderCrawler(
             address2 = orderInfo.rAddr2,
             deliveryMessage = orderInfo.dlvMsg.takeIf { it.isNotEmpty() }
         )
-        
+
         // Map price info
         val priceInfo = PriceInfo(
             totalGoodsAmount = orderInfo.totalGoodsAmt.toLongOrNull() ?: 0L,
@@ -124,7 +133,7 @@ class MusinsaOrderCrawler(
             addPoint = orderInfo.addPoint.toLongOrNull() ?: 0L,
             receiveAmount = orderInfo.recvAmt.toLongOrNull() ?: 0L
         )
-        
+
         // Map user info
         val userInfo = UserInfo(
             userId = orderInfo.userId,
@@ -134,14 +143,14 @@ class MusinsaOrderCrawler(
             groupLevel = orderInfo.groupLevel.toIntOrNull() ?: 0,
             groupName = orderInfo.group.groupName
         )
-        
+
         // Determine overall order state
         val orderState = if (orderItems.isNotEmpty()) {
             orderItems.first().orderState
         } else {
             OrderState.fromCode(orderInfo.ordState.toIntOrNull() ?: 0)
         }
-        
+
         return OrderDetailResponse(
             orderNo = orderList.orderNo,
             orderDate = orderDate,

@@ -221,5 +221,6 @@ data class MusinsaRefundOrderInfo(
 
 data class MusinsaRefundGroup(
     @JsonProperty("orderGroupLabel") val orderGroupLabel: String,
-    @JsonProperty("groupPoint") val groupPoint: Int
+    @JsonProperty("groupPoint") val groupPoint: Int,
+    @JsonProperty("levelSavePointRatio") val levelSavePointRatio: String? = null
 )
