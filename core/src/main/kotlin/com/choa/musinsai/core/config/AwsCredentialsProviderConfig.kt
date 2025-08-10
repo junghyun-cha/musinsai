@@ -1,7 +1,6 @@
 package com.choa.musinsai.core.config
 
 import com.choa.musinsai.core.utils.logger
-import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication

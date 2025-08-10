@@ -35,7 +35,7 @@ class WebClientConfig {
             .clientConnector(ReactorClientHttpConnector(httpClient))
             .exchangeStrategies(exchangeStrategies)
     }
-    
+
     @Bean
     fun webClient(webClientBuilder: WebClient.Builder): WebClient {
         return webClientBuilder.build()

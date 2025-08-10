@@ -14,7 +14,9 @@ import reactor.core.publisher.Mono
 import java.time.Duration
 
 @Component
-class MusinsaAuthCrawler : AuthCrawler {
+class MusinsaAuthCrawler(
+    webClientBuilder: WebClient.Builder,
+) : AuthCrawler {
 
     private val logger = KotlinLogging.logger {}
 
@@ -22,8 +24,8 @@ class MusinsaAuthCrawler : AuthCrawler {
         private const val AUTH_API_URL = "https://my.musinsa.com/api/member/v1/login-status"
         private const val USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
         private const val TIMEOUT_SECONDS = 10L
-        val ACCESS_TOKEN_KEY = "app_atk"
-        val REFRESH_TOKEN_KEY = "app_rtk"
+        const val ACCESS_TOKEN_KEY = "app_atk"
+        const val REFRESH_TOKEN_KEY = "app_rtk"
 
         // 인증에 필요한 필수 쿠키 키
         private val REQUIRED_COOKIES = setOf(
@@ -32,7 +34,7 @@ class MusinsaAuthCrawler : AuthCrawler {
         )
     }
 
-    private val webClient = WebClient.builder()
+    private val webClient = webClientBuilder
         .baseUrl(AUTH_API_URL)
         .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
         .defaultHeader(HttpHeaders.USER_AGENT, USER_AGENT)

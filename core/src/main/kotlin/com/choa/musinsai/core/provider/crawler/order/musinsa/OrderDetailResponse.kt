@@ -100,7 +100,7 @@ enum class OrderState(val code: Int, val text: String) {
 
     companion object {
         fun fromCode(code: Int): OrderState {
-            return values().find { it.code == code } 
+            return values().find { it.code == code }
                 ?: throw IllegalArgumentException("Unknown order state code: $code")
         }
     }
