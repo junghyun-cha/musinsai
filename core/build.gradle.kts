@@ -38,4 +38,5 @@ dependencies {
 // Testing
     testImplementation("org.mockito.kotlin:mockito-kotlin:5.0.0")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
+    testImplementation("io.mockk:mockk:1.13.12")
 }
